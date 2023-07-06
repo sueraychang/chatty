@@ -1,0 +1,6 @@
+{
+  "appTitle": "chattyapp",
+  "@appTitle": {
+    "description": "The title of the application"
+  }
+}
