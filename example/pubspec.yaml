@@ -17,6 +17,13 @@ dependencies:
 
   chatty:
     path: ../
+  firebase_core: ^2.14.0
+  logging: ^1.2.0
+  firebase_auth: ^4.6.3
+  google_sign_in: ^6.1.4
+  firebase_storage: ^11.2.4
+  cloud_firestore: ^4.8.2
+  cached_network_image: ^3.2.3
 
 dev_dependencies:
   flutter_test:

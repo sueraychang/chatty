@@ -1,20 +1,47 @@
+import 'package:chattyapp/firebase_options.dart';
+import 'package:chattyapp/utils/color_schemes.g.dart';
+import 'package:chattyapp/utils/common.dart';
+import 'package:chattyapp/utils/route_configuration.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-
-import 'src/app.dart';
-import 'src/settings/settings_controller.dart';
-import 'src/settings/settings_service.dart';
+import 'package:logging/logging.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
-  // Set up the SettingsController, which will glue user settings to multiple
-  // Flutter Widgets.
-  final settingsController = SettingsController(SettingsService());
+  WidgetsFlutterBinding.ensureInitialized();
 
-  // Load the user's preferred theme while the splash screen is displayed.
-  // This prevents a sudden theme change when the app is first displayed.
-  await settingsController.loadSettings();
+  Logger.root.level = isDebug() ? Level.ALL : Level.OFF;
+  Logger.root.onRecord.listen((record) {
+    // ignore: avoid_print
+    print(
+        '${record.level.name}: ${record.time}: ${record.loggerName}: ${record.message}');
+  });
 
-  // Run the app and pass in the SettingsController. The app listens to the
-  // SettingsController for changes, then passes it further down to the
-  // SettingsView.
-  runApp(MyApp(settingsController: settingsController));
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+  FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+  await FirebaseStorage.instance.useStorageEmulator('locahost', 9199);
+
+  runApp(const MainApp());
+}
+
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: cht,
+      theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
+      darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
+      onGenerateRoute: RouteConfiguration.onGenerateRoute,
+    );
+  }
 }
